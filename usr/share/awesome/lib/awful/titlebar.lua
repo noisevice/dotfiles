@@ -216,7 +216,7 @@ local titlebar = {
 -- @class function
 
 --- Show tooltips when hover on titlebar buttons (defaults to 'true')
-titlebar.enable_tooltip = true
+titlebar.enable_tooltip = false
 
 local all_titlebars = setmetatable({}, { __mode = 'k' })
 
