@@ -24,7 +24,7 @@ naughty.config.defaults.timeout = 5
 --naughty.config.defaults.border_width = 0
 
 -- My variable
-local titlebars_enabled = false
+local titlebars_enabled = true
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -601,7 +601,7 @@ for s = 1, screen.count() do
           end
 
           -- No titlebar
-          if awful.rules.match(c, {class = "Nautilus"}) or awful.rules.match(c, {class = "Evince"}) or awful.rules.match(c, {class = "Lollypop"}) or awful.rules.match(c, {class = "Plank"}) or awful.rules.match(c, {class = "Firefox"}) then                                     
+          if awful.rules.match(c, {class = "sushi"}) or awful.rules.match(c, {class = "Nautilus"}) or awful.rules.match(c, {class = "Evince"}) or awful.rules.match(c, {class = "Lollypop"}) or awful.rules.match(c, {class = "Plank"}) then                                     
               awful.titlebar.hide(c)
           end
         end
@@ -685,16 +685,23 @@ local function apply_shape(draw, shape, ...)
   cr:set_operator(cairo.Operator.SOURCE)
   cr:set_source_rgba(1,1,1,1)
 
-  gears.shape.transform(shape):translate(-1,-3)
+  gears.shape.transform(shape):translate(0,-3) -- -1 -3
   cr:fill()
   draw.shape_clip = img._native
+
+  -- draw border
+  cr:set_source(gears.color("#ff0000"))
+  cr:rectangle(10, 10, 10, 10)
+  cr:stroke()
 
   img:finish()
 end
 
 client.connect_signal("property::geometry", function (c)
 	if titlebars_enabled then
-		apply_shape(c, gears.shape.rounded_rect, 4)
+		gears.timer.delayed_call(function()
+			apply_shape(c, gears.shape.rounded_rect, 5)
+		end)
     	--gears.surface.apply_shape_bounding(c, gears.shape.rounded_rect, 5)
 	end
 end)
@@ -704,11 +711,11 @@ end)
 client.connect_signal("property::geometry", function (c)
   if titlebars_enabled and not awful.rules.match(c, {class = "Nautilus"}) then
 	  gears.timer.delayed_call(function()
-	    gears.surface.apply_shape_bounding(c, gears.shape.rounded_rect, 4)
-	    local geometry = c:geometry()
-	    local shape_clip = gears.surface.load_from_shape(geometry.width-14, geometry.height-14, gears.shape.rounded_rect, nil, nil, 6)
-	    shape_clip.transform(gears.shape.rounded_rect) : translate(2,2)
-	    c.shape_clip = shape_clip._native
+	    gears.surface.apply_shape_bounding(c, gears.shape.partially_rounded_rect, true, true, false, false, 5)
+	    --local geometry = c:geometry()
+	    --local shape_clip = gears.surface.load_from_shape(geometry.width-14, geometry.height-14, gears.shape.rounded_rect, nil, nil, 6)
+	    --shape_clip.transform(gears.shape.rounded_rect) : translate(2,2)
+	    --c.shape_clip = shape_clip._native
 	  end)
   end
 end)
