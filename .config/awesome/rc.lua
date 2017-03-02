@@ -712,10 +712,10 @@ client.connect_signal("property::geometry", function (c)
   if titlebars_enabled and not awful.rules.match(c, {class = "Nautilus"}) then
 	  gears.timer.delayed_call(function()
 	    gears.surface.apply_shape_bounding(c, gears.shape.partially_rounded_rect, true, true, false, false, 5)
-	    --local geometry = c:geometry()
-	    --local shape_clip = gears.surface.load_from_shape(geometry.width-14, geometry.height-14, gears.shape.rounded_rect, nil, nil, 6)
-	    --shape_clip.transform(gears.shape.rounded_rect) : translate(2,2)
-	    --c.shape_clip = shape_clip._native
+	    local geometry = c:geometry()
+	    local shape_clip = gears.surface.load_from_shape(geometry.width-14, geometry.height-14, gears.shape.partially_rounded_rect, true, true, false, false, 5)
+	    shape_clip.transform(gears.shape.rounded_rect) : translate(2,2)
+	    c.shape_clip = shape_clip._native
 	  end)
   end
 end)
